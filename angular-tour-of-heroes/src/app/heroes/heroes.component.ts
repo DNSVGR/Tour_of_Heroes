@@ -5,7 +5,7 @@ import { MessageService } from '../message.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, ValidatorFn, Validators, AbstractControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import {HeroDetailComponent} from "../hero-detail/hero-detail.component";
 @Component({
@@ -103,6 +103,8 @@ export class DeleteDialog {
   ngOnInit(){
     
     for(let i = 0; i < 5; i++) this.mControl.push(new FormControl());
+    this.mControl[2].setValidators(minmax(0, 81));
+    this.mControl[3] = new FormControl("", minmax(0, 1000));
     this.heroService.getHeroClasses().subscribe(heroClasses => {
       this.heroClasses = heroClasses;
       this.hero.heroClass = heroClasses[0];
@@ -114,8 +116,13 @@ export class DeleteDialog {
     for(let i = 0; i < this.mControl.length; i++){
       ans = ans && this.mControl[i].valid;
     }
-    console.log(this.mControl[3]);
     return ans;
   }
  }
  
+function minmax(min: number, max: number): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = (min > control.value) || isNaN(parseInt(control.value)) || (max < control.value);
+    return forbidden ? {'forbiddenNumber': {value: control.value}} : null;
+  };
+}

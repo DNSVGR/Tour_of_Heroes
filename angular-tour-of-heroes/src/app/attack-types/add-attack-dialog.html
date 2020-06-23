@@ -3,9 +3,9 @@
 <form>
     <mat-form-field>
         <mat-label>range</mat-label>
-        <select matNativeControl [(ngModel)] = "attackType.range" required name="range" value="Melee">
-            <option Value="Melee">Melee</option>
-            <option Value="Ranged">Ranged</option>
+        <select matNativeControl [(ngModel)] = "attackType.range" required name="range">
+            <option value="Melee" selected>Melee</option>
+            <option value="Ranged">Ranged</option>
         </select>
     </mat-form-field><br>
     <mat-form-field>

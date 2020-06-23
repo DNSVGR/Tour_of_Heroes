@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { AttackType } from '../hero';
+import { AttackType, Range } from '../hero';
 import { DataSource } from '@angular/cdk/table';
 import { HeroService } from '../hero.service';
 import { AddHeroDialog } from '../heroes/heroes.component';
@@ -91,5 +91,6 @@ export class AddAttackTypeDialog {
   constructor(private heroService: HeroService, @Inject(MAT_DIALOG_DATA) public data){}
   ngOnInit(){
     this.attackType = {id: this.data.id } as AttackType;
+    this.attackType.range= Range.Melee;
   }
  }
