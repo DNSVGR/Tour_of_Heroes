@@ -1,17 +1,42 @@
-<ul class="heroes">
-  <li *ngFor="let hero of heroes">
-    <a routerLink="/detail/{{hero.id}}">
-      <span class="badge">{{hero.id}}</span> {{hero.name}}
-    </a>
-    <button class="delete" title="delete hero" (click)="delete(hero)">x</button>
-  </li>
-</ul>
-<div>
-  <label>Hero name:
-    <input #heroName />
-  </label>
-  <!-- (click) passes input value to add() and then clears the input -->
-  <button (click)="add(heroName.value); heroName.value=''">
-    add
-  </button>
+<div style="height: auto;">
+  <div style="width:49%; margin-right: 10px; float: left; ">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+    </mat-form-field>
+
+    <table mat-table matSort [dataSource]="dataSource" style="width: 100%;" class="mat-elevation-z8" >
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> id </mat-header-cell>
+        <mat-cell *matCellDef="let element" (click)="selecHero($event, element)"> {{element.id}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name" >
+        <mat-header-cell *matHeaderCellDef mat-sort-header> name </mat-header-cell>
+        <mat-cell *matCellDef="let element" (click)="selecHero($event, element)"> {{element.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="level">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> level </mat-header-cell>
+        <mat-cell *matCellDef="let element" (click)="selecHero($event, element)"> 
+          {{element.level}} 
+          <button class="delete" mat-fab color="primary" title="delete hero" (click)="delete(element)"><mat-icon>delete</mat-icon></button>
+        </mat-cell>
+        
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="['id','name','level']"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['id','name','level']" ></mat-row>
+      
+    </table>
+    <mat-paginator [pageSizeOptions]="[6, 9, 12]"></mat-paginator>
+
+    <div>
+      <button mat-raised-button color="primary" (click) = "add()">Add</button>
+    </div>
+  </div>
+  <div  style="width: 49%; float: left;">
+    <app-hero-detail *ngIf="selectedHero" [hero] = "selectedHero"></app-hero-detail>
+  </div>
 </div>

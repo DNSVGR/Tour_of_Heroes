@@ -1,6 +1,5 @@
-
-<mat-card *ngIf="hero">
-  <form>
+<h2>New Hero</h2>
+<form>
     <mat-form-field>
         <input type="text" 
             matInput
@@ -8,11 +7,12 @@
             [(ngModel)]="hero.name"
             name="name"
             required
-            minlength="3">
+            minlength="3"
+            [formControl] = "mControl[0]">
     </mat-form-field><br>
     <mat-form-field>
         <mat-label>Class</mat-label>
-        <select matNativeControl [(ngModel)] = "hero.heroClass" required name="heroClass">
+        <select matNativeControl [(ngModel)] = "hero.heroClass" required name="heroClass" [formControl] = "mControl[1]">
             <option  *ngFor="let i of heroClasses" [ngValue]="i">{{i.className}}</option>
         </select>
     </mat-form-field><br>
@@ -20,10 +20,12 @@
         <mat-label>Level</mat-label>
         <input type="number" value="1"
             matInput
-            min="1"
-            max="81" 
+            ngMin=1
+            ngMax=81 
             [(ngModel)]="hero.level"
-            name="level">
+            name="level"
+            step=1
+            [formControl] = "mControl[2]">
     </mat-form-field><br>
     <mat-form-field>
         <mat-label>age</mat-label>
@@ -31,14 +33,21 @@
             matInput
             min="0"
             [(ngModel)]="hero.age"
-            name="age">
+            name="age"
+            [formControl] = "mControl[3]">
     </mat-form-field><br>
     <mat-form-field>
         <input type="text" 
             matInput
             placeholder="faction"
             [(ngModel)]="hero.faction"
-            name="faction">
+            name="faction"
+            minlength="5"
+            required
+            [formControl] = "mControl[4]">
     </mat-form-field>
-  </form>
-</mat-card>
+    <mat-dialog-actions>
+        <button mat-button [mat-dialog-close]>Cancel</button>
+        <button type ="submit" [disabled]="!valid()" mat-button [mat-dialog-close]="hero" >Add</button>
+    </mat-dialog-actions>
+</form>

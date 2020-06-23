@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Observable, Subject } from 'rxjs';
-
+import { FormControl } from '@angular/forms';
 import {
    debounceTime, distinctUntilChanged, switchMap
  } from 'rxjs/operators';
@@ -17,9 +17,9 @@ import { HeroService } from '../hero.service';
 export class HeroSearchComponent implements OnInit {
   heroes$: Observable<Hero[]>;
   private searchTerms = new Subject<string>();
-
+  myControl = new FormControl();
   constructor(private heroService: HeroService) {}
-
+  heroes: Hero[] = [];
   // Push a search term into the observable stream.
   search(term: string): void {
     this.searchTerms.next(term);
@@ -32,9 +32,14 @@ export class HeroSearchComponent implements OnInit {
 
       // ignore new term if same as previous term
       distinctUntilChanged(),
-
+      
       // switch to new search observable each time the term changes
       switchMap((term: string) => this.heroService.searchHeroes(term)),
     );
+    this.getHeroes();
+  }
+  getHeroes(): void {
+    this.heroService.getHeroes()
+      .subscribe(heroes => this.heroes = heroes.slice());
   }
 }

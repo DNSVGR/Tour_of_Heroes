@@ -1,0 +1,26 @@
+<span>attack type dialog</span>
+<h2>New attack type</h2>
+<form>
+    <mat-form-field>
+        <mat-label>range</mat-label>
+        <select matNativeControl [(ngModel)] = "attackType.range" required name="range" value="Melee">
+            <option Value="Melee">Melee</option>
+            <option Value="Ranged">Ranged</option>
+        </select>
+    </mat-form-field><br>
+    <mat-form-field>
+        <input type="text" 
+            matInput
+            placeholder="description"
+            [(ngModel)]="attackType.desc"
+            name="desc"
+            required
+            minlength="3"
+            [formControl] = "mControl">
+    </mat-form-field><br>
+    
+    <mat-dialog-actions>
+        <button mat-button [mat-dialog-close]>Cancel</button>
+        <button type ="submit" [disabled]="!mControl.valid" mat-button [mat-dialog-close]="attackType" >Add</button>
+    </mat-dialog-actions>
+</form>

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule }    from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeroesComponent } from './heroes/heroes.component';
@@ -11,7 +11,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './in-memory-data.service';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MaterialModule} from "./material-module";
+import { AttackTypesComponent, DeleteAttackDialog, AddAttackTypeDialog } from './attack-types/attack-types.component';
+import { ClassesComponent, AddHeroClassDialog, DeleteClassDialog } from './classes/classes.component';
+import {DeleteDialog, AddHeroDialog} from './heroes/heroes.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,16 +23,27 @@ import { HeroSearchComponent } from './hero-search/hero-search.component';
     HeroDetailComponent,
     MessagesComponent,
     DashboardComponent,
-    HeroSearchComponent
+    HeroSearchComponent,
+    AttackTypesComponent,
+    ClassesComponent,
+    DeleteDialog,
+    AddHeroDialog,
+    AddHeroClassDialog,
+    DeleteClassDialog,
+    DeleteAttackDialog,
+    AddAttackTypeDialog
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    MaterialModule,
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
-    )
+    ),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

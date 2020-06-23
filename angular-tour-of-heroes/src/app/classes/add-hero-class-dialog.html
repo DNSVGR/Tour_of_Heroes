@@ -1,0 +1,24 @@
+<span>hero class dialog</span>
+<h2>New Class</h2>
+<form>
+    <mat-form-field>
+        <input type="text" 
+            matInput
+            placeholder="className"
+            [(ngModel)]="heroClass.className"
+            name="className"
+            required
+            minlength="3"
+            [formControl] = "mControl">
+    </mat-form-field><br>
+    <mat-form-field>
+        <mat-label>attackType</mat-label>
+        <select matNativeControl [(ngModel)] = "heroClass.attackType" required name="attackType">
+            <option  *ngFor="let i of attackTypes" [ngValue]="i">{{i.desc}}</option>
+        </select>
+    </mat-form-field><br>
+    <mat-dialog-actions>
+        <button mat-button [mat-dialog-close]>Cancel</button>
+        <button type ="submit" [disabled]="!mControl.valid" mat-button [mat-dialog-close]="heroClass" >Add</button>
+    </mat-dialog-actions>
+</form>

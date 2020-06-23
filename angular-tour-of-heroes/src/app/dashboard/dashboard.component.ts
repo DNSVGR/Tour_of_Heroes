@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
-
+import { PageEvent, MAT_PAGINATOR_DEFAULT_OPTIONS } from '@angular/material/paginator';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,15 +9,20 @@ import { HeroService } from '../hero.service';
 })
 export class DashboardComponent implements OnInit {
   heroes: Hero[] = [];
-
+  pagePros = {
+    pageIndex: 0,
+    pageSize: 6,
+  };
   constructor(private heroService: HeroService) { }
 
   ngOnInit() {
     this.getHeroes();
   }
-
+  heroesOnPage(){
+    return this.heroes.slice(this.pagePros.pageIndex * this.pagePros.pageSize, this.pagePros.pageIndex * this.pagePros.pageSize + this.pagePros.pageSize);
+  }
   getHeroes(): void {
     this.heroService.getHeroes()
-      .subscribe(heroes => this.heroes = heroes.slice(1, 5));
+      .subscribe(heroes => this.heroes = heroes.slice());
   }
 }

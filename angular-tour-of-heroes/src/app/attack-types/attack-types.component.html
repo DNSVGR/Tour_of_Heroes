@@ -1,0 +1,35 @@
+<mat-form-field>
+<mat-label>Filter</mat-label>
+<input matInput (keyup)="applyFilter($event)">
+</mat-form-field>
+
+<table mat-table matSort [dataSource]="dataSource" style="width: 100%;" class="mat-elevation-z8" >
+<ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> id </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="range" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header> range </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.range}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="desc">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> desc </mat-header-cell>
+    <mat-cell *matCellDef="let element"> 
+    {{element.desc}} 
+    <button class="delete" mat-fab color="primary" title="delete Attack type" (click)="delete(element)"><mat-icon>delete</mat-icon></button>
+</mat-cell>
+    
+</ng-container>
+
+
+<mat-header-row *matHeaderRowDef="['id','range','desc']"></mat-header-row>
+<mat-row *matRowDef="let row; columns: ['id','range', 'desc']" ></mat-row>
+
+</table>
+<mat-paginator [pageSizeOptions]="[6, 9, 12]"></mat-paginator>
+
+<div>
+<button mat-raised-button color="primary" (click) = "add()">Add</button>
+</div>

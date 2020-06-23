@@ -10,4 +10,19 @@
         </a>
       </li>
     </ul>
+    <mat-form-field class="example-full-width">
+      <input type="text"
+             placeholder="Pick one"
+             aria-label="Number"
+             matInput
+             [formControl]="myControl"
+             [matAutocomplete]="auto"
+             #sb
+             (input)='search(sb.value)'>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let hero of heroes" [value]="hero">
+          {{hero.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
   </div>
