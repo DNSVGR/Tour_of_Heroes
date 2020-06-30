@@ -23,7 +23,6 @@ export class HeroDetailComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getHero();
-    console.log(this.hero.heroClass)
   }
   ngOnChanges(){
     if (this.heroClasses)

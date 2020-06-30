@@ -9,11 +9,11 @@ import { catchError, map, tap, delay, debounceTime, subscribeOn } from 'rxjs/ope
   providedIn: 'root'
 })
 export class HeroService {
-  private heroesUrl = 'api/heroes';
-  private heroClassesUrl = 'api/heroClasses';
-  private attackTypesUrl = "api/attackTypes";
+  private heroesUrl = 'http://localhost:3000/api/heroes';
+  private heroClassesUrl = 'http://localhost:3000/api/heroClasses';
+  private attackTypesUrl = "http://localhost:3000/api/attackTypes";
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
   };
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl)
@@ -30,12 +30,12 @@ export class HeroService {
     );
   }
   getHeroClasses(): Observable<HeroClass[]> {
-    const url = `${this.heroClassesUrl}`
+    const url = `${this.heroClassesUrl}`;
     return this.http.get<HeroClass[]>(url).pipe(
       tap(_ => this.messageService.add("revived hero classes"))
     )
   }
-  constructor(private messageService: MessageService, private http: HttpClient,) { }
+  constructor(private messageService: MessageService, private http: HttpClient) { }
   private log(message: string) {
     this.messageService.add(`HeroService: ${message}`);
   }
@@ -94,15 +94,9 @@ export class HeroService {
 
     //TODO: move verification to server
     var obs = new Observable<HeroClass>(sub => {
-      this.http.get<Hero[]>(`${this.heroesUrl}/?heroClassId=${id}`).pipe(
-        tap(x => {
-            x.length ? this.log(`found matching hero for hero class "${id}"`) :
-                      this.log(`no heros matching "${id}"`);
-            console.log(x);
-          },
-        catchError(this.handleError<Hero[]>('searchHeroClasses', []))
-      )).subscribe(x => {
-        if(x.length == 0){
+      this.http.get<Hero[]>(`${this.heroesUrl}/?heroClassId=${id}`)
+      .subscribe(x => {
+        if(!x || x.length == 0){
           this.http.delete<HeroClass>(this.heroClassesUrl+"/"+id, this.httpOptions).pipe(
             tap(_ => this.log(`deleted heroClasses id=${id}`)),
             //catchError(this.handleError<HeroClasses>('deleteHeroClass'))
@@ -135,15 +129,9 @@ export class HeroService {
 
     //TODO: move verification to server
     var obs = new Observable<AttackType>(sub => {
-      this.http.get<HeroClass[]>(`${url}/?attackTypeId=${id}`).pipe(
-        tap(x => {
-            x.length ? this.log(`found matching hero class for attack type "${id}"`) :
-                      this.log(`no hero class matching "${id}"`);
-            console.log(x);
-          },
-        catchError(this.handleError<Hero[]>('searchAttackTypes', []))
-      )).subscribe(x => {
-        if(x.length == 0){
+      this.http.get<HeroClass[]>(`${url}/?attackTypeId=${id}`)
+      .subscribe(x => {
+        if(!x || x.length == 0){
           this.http.delete<AttackType>(this.attackTypesUrl+"/"+id, this.httpOptions).pipe(
             tap(_ => this.log(`deleted attackType id=${id}`)),
             catchError(this.handleError<Hero>('deleteAttackType'))
