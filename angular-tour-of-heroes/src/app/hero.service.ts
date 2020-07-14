@@ -55,18 +55,18 @@ export class HeroService {
   updateHero(hero: Hero): Observable<any> {
     console.log(hero);
     return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
-      tap(_ => this.log(`updated hero id=${hero.id}`)),
+      tap(_ => this.log(`updated hero id=${hero._id}`)),
       catchError(this.handleError<any>('updateHero'))
     );
   }
   addHero(hero: Hero): Observable<Hero> {
     return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
-      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
+      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero._id}`)),
       catchError(this.handleError<Hero>('addHero'))
     );
   }
-  deleteHero(hero: Hero | number): Observable<Hero> {
-    const id = typeof hero === 'number' ? hero : hero.id;
+  deleteHero(hero: Hero | string): Observable<Hero> {
+    const id = typeof hero === 'string' ? hero : hero._id;
     const url = `${this.heroesUrl}/${id}`;
   
     return this.http.delete<Hero>(url, this.httpOptions).pipe(
@@ -89,14 +89,14 @@ export class HeroService {
 
 
   deleteHeroClass(heroClass: HeroClass | number): Observable<HeroClass> {
-    const id = typeof heroClass === 'number' ? heroClass : heroClass.id;
+    const id = typeof heroClass === 'number' ? heroClass : heroClass._id;
     const url = `${this.heroesUrl}/${id}`;
 
     //TODO: move verification to server
     var obs = new Observable<HeroClass>(sub => {
-      this.http.get<Hero[]>(`${this.heroesUrl}/?heroClassId=${id}`)
-      .subscribe(x => {
-        if(!x || x.length == 0){
+      // this.http.get<Hero[]>(`${this.heroesUrl}/?heroClassId=${id}`)
+      // .subscribe(x => {
+       // if(!x || x.length == 0){
           this.http.delete<HeroClass>(this.heroClassesUrl+"/"+id, this.httpOptions).pipe(
             tap(_ => this.log(`deleted heroClasses id=${id}`)),
             //catchError(this.handleError<HeroClasses>('deleteHeroClass'))
@@ -104,8 +104,8 @@ export class HeroService {
             sub.next(_ as HeroClass);
             console.log("deleted class" + _)
           })
-        }
-      })
+      //  }
+     // })
     });
     return obs;
   }
@@ -113,7 +113,7 @@ export class HeroService {
   addHeroClass(heroClass: HeroClass){
     console.log("trying to post:", heroClass)
     return this.http.post<HeroClass>(this.heroClassesUrl, heroClass, this.httpOptions).pipe(
-      tap((newHeroClass: HeroClass) => this.log(`added hero Class w/ id=${newHeroClass.id}`)),
+      tap((newHeroClass: HeroClass) => this.log(`added hero Class w/ id=${newHeroClass._id}`)),
       catchError(this.handleError<Hero>('addHero'))
     );
   }
@@ -124,14 +124,14 @@ export class HeroService {
     )
   }
   deleteAttackType(attackType: AttackType | number): Observable<AttackType> {
-    const id = typeof attackType === 'number' ? attackType : attackType.id;
+    const id = typeof attackType === 'number' ? attackType : attackType._id;
     const url = `${this.heroClassesUrl}`;
 
     //TODO: move verification to server
     var obs = new Observable<AttackType>(sub => {
-      this.http.get<HeroClass[]>(`${url}/?attackTypeId=${id}`)
-      .subscribe(x => {
-        if(!x || x.length == 0){
+      // this.http.get<HeroClass[]>(`${url}/?attackTypeId=${id}`)
+      // .subscribe(x => {
+      //   if(!x || x.length == 0){
           this.http.delete<AttackType>(this.attackTypesUrl+"/"+id, this.httpOptions).pipe(
             tap(_ => this.log(`deleted attackType id=${id}`)),
             catchError(this.handleError<Hero>('deleteAttackType'))
@@ -139,15 +139,15 @@ export class HeroService {
             sub.next(_ as AttackType);
             console.log("deleted class" + _)
           })
-        }
-      })
+      //   }
+      // })
     });
     return obs;
   }
   addAttackType(attackType: AttackType){
     console.log("trying to post:", attackType)
     return this.http.post<AttackType>(this.attackTypesUrl, attackType, this.httpOptions).pipe(
-      tap((newAttackType: AttackType) => this.log(`added Attack Type w/ id=${newAttackType.id}`)),
+      tap((newAttackType: AttackType) => this.log(`added Attack Type w/ id=${newAttackType._id}`)),
       catchError(this.handleError<Hero>('addHero'))
     );
   }

@@ -1,4 +1,5 @@
 var express = require('express');
+const { ObjectId } = require('mongodb');
 var router = express.Router();
 /* GET home page. */
 const Range = {
@@ -33,31 +34,57 @@ const attackTypes = [
     { id: 20, name: 'Tornado', heroClassId:1, heroClass: heroClasses[0], level: 11, age: 102, faction: "Allience"  }
   ];
 router.get('/', function(req, res, next) {
-    if (req.query.heroClassId){
-        res.send(heroes.find(el => (el.heroClassId == req.query.heroClassId || el.name == req.query.name)));
-    } else
-    res.send(heroes)
-});
-router.put('/', function(req, res, next){
-    heroes[heroes.findIndex(el => el.id == req.body.id)] = req.body
-    console.log(heroes[0]);
-    res.send();
+   
+    req.mongo.db("heroesTour").collection("heroes").aggregate([
+        {
+            $lookup:
+            {
+                from: "heroClasses",
+                localField:"heroClass",
+                foreignField: "_id",
+                as: "heroClass"
+            }
+            
+        }
+    ]).toArray().then(function(ans){
+        console.log(ans);
+        res.send(ans);
+    });
 });
 router.post('/', function(req, res, next){
-    req.body.id = heroes[heroes.length-1].id+1;
-    heroes.push(req.body)
-    console.log(heroes[heroes.length-1]);
+    req.mongo.db("heroesTour").collection("heroes").insert(req.body);
+    res.send();
+});
+router.put('/', function(req, res, next){
+    var filter = { "_id": ObjectId(req.body._id)}
+    delete req.body._id;
+    req.body.heroClass = req.body.heroClass._id;
+    req.mongo.db("heroesTour").collection("heroes").updateOne(filter, {
+        $set: req.body
+    })
     res.send(req.body);
 });
 router.delete('/:heroId', function(req, res, next){
-    heroes.splice(heroes.findIndex(el => el.id == req.params.heroId), 1);
+    var filter = {"_id": ObjectId(req.params.heroId)}
+    req.mongo.db("heroesTour").collection("heroes").deleteOne(filter);
     res.send();
 })
 router.get('/:heroId', function(req, res, next){
-    console.log("heroid: ", req.params.heroId)
-    res.send(heroes.find(el => el.id == req.params.heroId));
+    var filter = {"_id": ObjectId(req.params.heroId)}
+    req.mongo.db("heroesTour").collection("heroes").aggregate([
+        {
+            $lookup:
+            {
+                from: "heroClasses",
+                localField:"heroClass",
+                foreignField: "_id",
+                as: "heroClass"
+            }
+        },
+        { $match : { _id : ObjectId(req.params.heroId) } }
+    ]).toArray().then(function(ans){
+        console.log(ans);
+        res.send(ans);
+    });
 });
-router.get('/:heroName', function(req, res, next){
-    res.send(heroes.find(el => el.name == req.params.heroName));
-})
 module.exports = router;

@@ -8,7 +8,7 @@
     <table mat-table matSort [dataSource]="dataSource" style="width: 100%;" class="mat-elevation-z8" >
       <ng-container matColumnDef="id">
         <mat-header-cell *matHeaderCellDef mat-sort-header> id </mat-header-cell>
-        <mat-cell *matCellDef="let element" (click)="selecHero($event, element)"> {{element.id}} </mat-cell>
+        <mat-cell *matCellDef="let element" (click)="selecHero($event, element)"> {{element._id}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="name" >

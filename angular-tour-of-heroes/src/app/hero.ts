@@ -3,17 +3,17 @@ export enum Range {
     Ranged = "Ranged"
 }
 export interface AttackType{
-    id: number;
+    _id: number;
     range: Range;
     desc: string;
 }
 export interface HeroClass {
-    id: number;
+    _id: number;
     className: string;
     attackType: AttackType;
 }
 export interface Hero {
-    id: number;
+    _id: string;
     name: string;
     heroClass: HeroClass;
     level: number;

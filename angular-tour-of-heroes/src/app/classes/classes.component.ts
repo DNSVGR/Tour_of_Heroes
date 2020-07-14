@@ -75,7 +75,7 @@ export class ClassesComponent implements OnInit {
   
 }
 function genId(heroClass: HeroClass[]): number {
-    return heroClass.length > 0 ? Math.max(...heroClass.map(hero => hero.id)) + 1 : 1;
+    return heroClass.length > 0 ? Math.max(...heroClass.map(hero => hero._id)) + 1 : 1;
   }
 
 @Component({
@@ -88,7 +88,7 @@ export class AddHeroClassDialog {
  attackTypes: AttackType[];
  constructor(private heroService: HeroService, @Inject(MAT_DIALOG_DATA) public data){}
  ngOnInit(){
-   this.heroClass = {id: this.data.id } as HeroClass;
+   this.heroClass = {_id: this.data._id } as HeroClass;
    this.heroService.getAttackTypes().subscribe(attackTypes => {
      this.attackTypes = attackTypes;
      this.heroClass.attackType = attackTypes[0];

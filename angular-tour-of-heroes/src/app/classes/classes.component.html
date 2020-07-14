@@ -7,7 +7,7 @@
   <table mat-table matSort [dataSource]="dataSource" style="width: 100%;" class="mat-elevation-z8" >
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef mat-sort-header> id </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element._id}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="className" >
@@ -17,12 +17,12 @@
 
     <ng-container matColumnDef="range">
         <mat-header-cell *matHeaderCellDef mat-sort-header> range </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.attackType.range}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.attackType[0].range}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="desc">
       <mat-header-cell *matHeaderCellDef mat-sort-header> desc </mat-header-cell>
       <mat-cell *matCellDef="let element"> 
-        {{element.attackType.desc}} 
+        {{element.attackType[0].desc}} 
         <button class="delete" mat-fab color="primary" title="delete hero calss" (click)="delete(element)"><mat-icon>delete</mat-icon></button>
       </mat-cell>
       

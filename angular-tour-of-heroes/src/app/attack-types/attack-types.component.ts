@@ -72,7 +72,7 @@ export class AttackTypesComponent implements OnInit {
   }
 }
 function genId(attackType: AttackType[]): number {
-  return attackType.length > 0 ? Math.max(...attackType.map(attack => attack.id)) + 1 : 1;
+  return attackType.length > 0 ? Math.max(...attackType.map(attack => attack._id)) + 1 : 1;
 }
 @Component({
   selector:"delete-attack-dialog",
@@ -90,7 +90,7 @@ export class AddAttackTypeDialog {
   attackType: AttackType;
   constructor(private heroService: HeroService, @Inject(MAT_DIALOG_DATA) public data){}
   ngOnInit(){
-    this.attackType = {id: this.data.id } as AttackType;
+    this.attackType = {_id: this.data._id } as AttackType;
     this.attackType.range= Range.Melee;
   }
  }

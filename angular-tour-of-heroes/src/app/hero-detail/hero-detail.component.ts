@@ -26,13 +26,13 @@ export class HeroDetailComponent implements OnInit {
   }
   ngOnChanges(){
     if (this.heroClasses)
-      this.hero.heroClass = this.heroClasses.find(el => el.id == this.hero.heroClass.id);
+      this.hero.heroClass = this.heroClasses.find(el => el._id == this.hero.heroClass._id);
   }
   getHero(): void {
     if(this.hero){
       this.heroService.getHeroClasses().subscribe(heroClasses => {
         this.heroClasses = heroClasses;
-        this.hero.heroClass = this.heroClasses.find(el => el.id == this.hero.heroClass.id);
+        this.hero.heroClass = this.heroClasses.find(el => el._id == this.hero.heroClass._id);
       })
       return;
     }
@@ -43,7 +43,7 @@ export class HeroDetailComponent implements OnInit {
           this.hero = observer[0];
           this.heroClasses = observer[1];
           console.log(this.hero);
-          this.hero.heroClass = this.heroClasses.find(el => el.id == this.hero.heroClass.id);
+          this.hero.heroClass = this.heroClasses.find(el => el._id == this.hero.heroClass._id);
         }
       );
   }

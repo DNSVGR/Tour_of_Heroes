@@ -1,4 +1,5 @@
 var express = require('express');
+const { ObjectId } = require('mongodb');
 var router = express.Router();
 const Range = {
     Melee: "Melee",
@@ -23,18 +24,37 @@ var heroClasses = [
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  var filter;
   if (req.query.attackTypeId){
-    res.send(heroClasses.find(el => (el.attackTypeId == req.query.attackTypeId)));
-} else
-  res.send(heroClasses);
+    filter = {"attackType": new ObjectId(req.query.attackTypeId)}
+  }
+  // req.mongo.db("heroesTour").collection("heroClasses").find(filter).toArray().then(ans => {
+  //   res.send(ans);
+  // });
+  req.mongo.db("heroesTour").collection("heroClasses").aggregate([
+    {
+        $lookup:
+        {
+            from: "attackTypes",
+            localField:"attackType",
+            foreignField: "_id",
+            as: "attackType"
+        }
+    }
+  ]).toArray().then(function(ans){
+      console.log(ans);
+      res.send(ans);
+  });
 });
 router.delete('/:heroClassId', function(req, res, next){
-  heroClasses.splice(heroClasses.findIndex(el => el.id == req.params.heroClassId), 1);
-  res.send(heroClasses);
+  var filter = {"_id": ObjectId(req.params.heroClassId)}
+  req.mongo.db("heroesTour").collection("heroClasses").deleteOne(filter);
+  res.send();
 });
 router.post('/', function(req, res, next){
-  req.body.id = heroClasses[heroClasses.length-1].id+1;
-  heroClasses.push(req.body)
+  req.body.attackType = ObjectId(req.body.attackType._id);
+  delete req.body.id;
+  req.mongo.db("heroesTour").collection("heroClasses").insert(req.body);
   res.send(req.body);
 })
 module.exports = router;
