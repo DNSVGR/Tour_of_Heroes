@@ -32,8 +32,14 @@ router.delete('/:heroClassId', function(req, res, next){
 });
 router.post('/', function(req, res, next){
   req.body.attackType = ObjectId(req.body.attackType._id);
-  delete req.body.id;
-  req.mongo.db("heroesTour").collection("heroClasses").insert(req.body);
-  res.send(req.body);
+  req.mongo.db("heroesTour").collection("heroClasses").insert(req.body).then((info, next) =>{
+    req.mongo.db("heroesTour").collection("attackTypes").find({_id: req.body.attackType}).toArray()
+    .then(ans => {
+      req.body.attackType = ans;
+      console.log(req.body);
+      req.body.attackType = req.body.attackType[0];
+      res.send(req.body);
+    })
+  });
 })
 module.exports = router;

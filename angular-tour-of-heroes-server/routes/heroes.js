@@ -18,17 +18,23 @@ router.get('/', function(req, res, next) {
         }
     ]).toArray().then(function(ans){
         console.log(ans);
+        ans.forEach(el => {
+            el.heroClass = el.heroClass[0];
+        });
         res.send(ans);
     });
 });
 router.post('/', function(req, res, next){
-    req.mongo.db("heroesTour").collection("heroes").insert(req.body);
-    res.send();
+    req.mongo.db("heroesTour").collection("heroes").insert(req.body)
+    .then((info, next) => {
+        console.log(res)
+        res.send(info.insertedIds[0])
+    })
 });
 router.put('/', function(req, res, next){
     var filter = { "_id": ObjectId(req.body._id)}
     delete req.body._id;
-    req.body.heroClass = req.body.heroClass._id;
+    req.body.heroClass = ObjectId(req.body.heroClass._id);
     req.mongo.db("heroesTour").collection("heroes").updateOne(filter, {
         $set: req.body
     })
@@ -41,7 +47,9 @@ router.delete('/:heroId', function(req, res, next){
 })
 router.get('/:heroId', function(req, res, next){
     var filter = {"_id": ObjectId(req.params.heroId)}
+    console.log("lalala");
     req.mongo.db("heroesTour").collection("heroes").aggregate([
+        { $match : { _id : ObjectId(req.params.heroId) }},
         {
             $lookup:
             {
@@ -50,9 +58,10 @@ router.get('/:heroId', function(req, res, next){
                 foreignField: "_id",
                 as: "heroClass"
             }
-        },
-        { $match : { _id : ObjectId(req.params.heroId) } }
+        }
     ]).toArray().then(function(ans){
+        ans = ans[0];
+        ans.heroClass = ans.heroClass[0];
         console.log(ans);
         res.send(ans);
     });

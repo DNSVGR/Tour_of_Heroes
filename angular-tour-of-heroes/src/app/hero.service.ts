@@ -17,11 +17,11 @@ export class HeroService {
   };
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl)
-      .pipe(tap(_ => this.log('fetched heroes')),
+      .pipe(tap(_ => console.log(_)),
         catchError(this.handleError<Hero[]>('getHeroes', []))
       );
   }
-  getHero(id: number): Observable<Hero> {
+  getHero(id: string): Observable<Hero> {
     // TODO: send the message _after_ fetching the hero
     const url = `${this.heroesUrl}/${id}`;
     return this.http.get<Hero>(url).pipe(
@@ -59,11 +59,8 @@ export class HeroService {
       catchError(this.handleError<any>('updateHero'))
     );
   }
-  addHero(hero: Hero): Observable<Hero> {
-    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
-      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero._id}`)),
-      catchError(this.handleError<Hero>('addHero'))
-    );
+  addHero(hero: Hero): Observable<string> {
+    return this.http.post<string>(this.heroesUrl, hero, this.httpOptions);
   }
   deleteHero(hero: Hero | string): Observable<Hero> {
     const id = typeof hero === 'string' ? hero : hero._id;

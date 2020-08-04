@@ -27,6 +27,7 @@ export class ClassesComponent implements OnInit {
     this.heroService.getHeroClasses()
       .subscribe(heroClasses => {
         this.heroClasses = heroClasses;
+        heroClasses.forEach(el => el.attackType = el.attackType[0])
         this.dataSource = new MatTableDataSource<HeroClass>(this.heroClasses);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -53,13 +54,7 @@ export class ClassesComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   add(){
-    this.dialog.open(AddHeroClassDialog, {
-      data:{ 
-        id: genId(this.heroClasses)
-      }
-    }).afterClosed().subscribe((heroClass:HeroClass) => {
-      // heroClass = {...this.heroClasses[0]};
-      // heroClass.id = this.genId(this.heroClasses);
+    this.dialog.open(AddHeroClassDialog).afterClosed().subscribe((heroClass:HeroClass) => {
       console.log(heroClass);
      if(heroClass){
         this.heroService.addHeroClass(heroClass)
@@ -88,7 +83,7 @@ export class AddHeroClassDialog {
  attackTypes: AttackType[];
  constructor(private heroService: HeroService, @Inject(MAT_DIALOG_DATA) public data){}
  ngOnInit(){
-   this.heroClass = {_id: this.data._id } as HeroClass;
+   this.heroClass = {} as HeroClass;
    this.heroService.getAttackTypes().subscribe(attackTypes => {
      this.attackTypes = attackTypes;
      this.heroClass.attackType = attackTypes[0];

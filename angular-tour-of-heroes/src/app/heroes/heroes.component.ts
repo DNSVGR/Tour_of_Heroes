@@ -53,8 +53,8 @@ export class HeroesComponent implements OnInit {
       console.log("hero: ",hero);
       if(hero){
         this.heroService.addHero(hero)
-          .subscribe(hero => {
-            console.log(hero);
+          .subscribe(res => {
+            hero._id = res;
             this.dataSource.data.push(hero);
             this.dataSource.paginator.length++;
             this.dataSource.data = this.dataSource.sortData(this.dataSource.data, this.dataSource.sort);

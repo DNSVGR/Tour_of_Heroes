@@ -12,8 +12,8 @@
     </mat-form-field><br>
     <mat-form-field>
         <mat-label>Class</mat-label>
-        <select matNativeControl [(ngModel)] = "hero.heroClass" required name="heroClass">
-            <option  *ngFor="let i of heroClasses" [ngValue]="i">{{i.className}}</option>
+        <select matNativeControl [(ngModel)] = "hero.heroClass._id" required name="heroClass">
+            <option  *ngFor="let i of heroClasses" [ngValue]="i._id">{{i.className}}</option>
         </select>
     </mat-form-field><br>
     <mat-form-field>

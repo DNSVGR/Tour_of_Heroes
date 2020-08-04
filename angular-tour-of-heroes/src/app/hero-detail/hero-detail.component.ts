@@ -19,35 +19,57 @@ export class HeroDetailComponent implements OnInit {
     private location: Location
   ) { }
   goBack(): void {
-    this.location.back();
+    this.route.url.subscribe(res => {
+      console.log(res)
+      if(res[0].path === "detail"){
+        this.location.back();
+      }
+    })
+    
   }
   ngOnInit(): void {
     this.getHero();
   }
   ngOnChanges(){
-    if (this.heroClasses)
+    if (this.heroClasses){
       this.hero.heroClass = this.heroClasses.find(el => el._id == this.hero.heroClass._id);
+    }
   }
   getHero(): void {
     if(this.hero){
       this.heroService.getHeroClasses().subscribe(heroClasses => {
         this.heroClasses = heroClasses;
-        this.hero.heroClass = this.heroClasses.find(el => el._id == this.hero.heroClass._id);
+        console.log(this.heroClasses);
+        console.log(this.hero)
+        
       })
       return;
     }
-    const id = +this.route.snapshot.paramMap.get('id');
-    combineLatest(this.heroService.getHero(id), this.heroService.getHeroClasses())
-      .subscribe((observer) => {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log(id)
+    this.heroService.getHero(id).subscribe(hero => {
+      this.hero = hero; 
+      console.log(hero);
+      this.heroService.getHeroClasses()
+        .subscribe(classes => {
+          console.log(classes)
+          this.heroClasses = classes; 
           
-          this.hero = observer[0];
-          this.heroClasses = observer[1];
-          console.log(this.hero);
-          this.hero.heroClass = this.heroClasses.find(el => el._id == this.hero.heroClass._id);
-        }
-      );
+        });  
+      console.log(this.hero)
+    });
+    
+    // combineLatest(this.heroService.getHero(id), this.heroService.getHeroClasses())
+    //   .subscribe((observer) => {   
+    //       this.hero = observer[0];
+    //       this.heroClasses = observer[1];
+    //       console.log(this.heroClasses);
+    //       console.log(this.hero);
+    //     }
+    //   );
   }
   save(): void {
+    console.log(this.hero)
     this.heroService.updateHero(this.hero)
       .subscribe(() => this.goBack());
   }
