@@ -15,6 +15,8 @@ import {MaterialModule} from "./material-module";
 import { AttackTypesComponent, DeleteAttackDialog, AddAttackTypeDialog } from './attack-types/attack-types.component';
 import { ClassesComponent, AddHeroClassDialog, DeleteClassDialog } from './classes/classes.component';
 import {DeleteDialog, AddHeroDialog} from './heroes/heroes.component';
+import { LoginFormComponent } from './login-form/login-form.component';
+import { CookieService } from 'ngx-cookie-service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,8 @@ import {DeleteDialog, AddHeroDialog} from './heroes/heroes.component';
     AddHeroClassDialog,
     DeleteClassDialog,
     DeleteAttackDialog,
-    AddAttackTypeDialog
+    AddAttackTypeDialog,
+    LoginFormComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +44,7 @@ import {DeleteDialog, AddHeroDialog} from './heroes/heroes.component';
     MaterialModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

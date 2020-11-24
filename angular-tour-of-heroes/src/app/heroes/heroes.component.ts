@@ -14,7 +14,7 @@ import {HeroDetailComponent} from "../hero-detail/hero-detail.component";
   styleUrls: ['./heroes.component.scss']
 })
 export class HeroesComponent implements OnInit {
-  heroes: Hero[];
+  heroes: Hero[] =[];
   selectedHero: Hero;
   dataSource = new MatTableDataSource<Hero>(this.heroes);
   selectedRow: HTMLElement;

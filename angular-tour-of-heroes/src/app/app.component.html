@@ -6,5 +6,6 @@
      (click)="activeLink = link"
      [active]="activeLink == link"> {{link}} </a>
 </nav>
-<router-outlet></router-outlet>
+<router-outlet *ngIf='isLogged'></router-outlet>
+<app-login-form *ngIf='!isLogged' (isLogged)='onLogin()'></app-login-form>
 <app-messages></app-messages>

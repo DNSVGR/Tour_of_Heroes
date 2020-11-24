@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, Subscriber } from 'rxjs';
 import { MessageService } from './message.service';
 import { catchError, map, tap, delay, debounceTime, subscribeOn } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,14 @@ export class HeroService {
   private heroClassesUrl = 'http://localhost:3000/api/heroClasses';
   private attackTypesUrl = "http://localhost:3000/api/attackTypes";
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
+    headers: new HttpHeaders({ 
+      'Content-Type': 'application/x-www-form-urlencoded', 
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': this.cookieService.get('Authorization')
+    })
   };
   getHeroes(): Observable<Hero[]> {
-    return this.http.get<Hero[]>(this.heroesUrl)
+    return this.http.get<Hero[]>(this.heroesUrl, this.httpOptions)
       .pipe(tap(_ => console.log(_)),
         catchError(this.handleError<Hero[]>('getHeroes', []))
       );
@@ -24,18 +29,18 @@ export class HeroService {
   getHero(id: string): Observable<Hero> {
     // TODO: send the message _after_ fetching the hero
     const url = `${this.heroesUrl}/${id}`;
-    return this.http.get<Hero>(url).pipe(
+    return this.http.get<Hero>(url, this.httpOptions).pipe(
       tap(_ => this.messageService.add("recived a hero")),
       catchError(this.handleError<Hero>(`getHero id=${id}`))
     );
   }
   getHeroClasses(): Observable<HeroClass[]> {
     const url = `${this.heroClassesUrl}`;
-    return this.http.get<HeroClass[]>(url).pipe(
+    return this.http.get<HeroClass[]>(url, this.httpOptions).pipe(
       tap(_ => this.messageService.add("revived hero classes"))
     )
   }
-  constructor(private messageService: MessageService, private http: HttpClient) { }
+  constructor(private messageService: MessageService, private http: HttpClient, private cookieService: CookieService) { }
   private log(message: string) {
     this.messageService.add(`HeroService: ${message}`);
   }
@@ -76,7 +81,7 @@ export class HeroService {
       // if not search term, return empty hero array.
       return of([]);
     }
-    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`, this.httpOptions).pipe(
       tap(x => x.length ?
          this.log(`found heroes matching "${term}"`) :
          this.log(`no heroes matching "${term}"`)),
@@ -116,7 +121,7 @@ export class HeroService {
   }
   getAttackTypes(): Observable<AttackType[]> {
     const url = `${this.attackTypesUrl}`
-    return this.http.get<AttackType[]>(url).pipe(
+    return this.http.get<AttackType[]>(url, this.httpOptions).pipe(
       tap(_ => this.messageService.add("revived hero classes"))
     )
   }
